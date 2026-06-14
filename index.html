@@ -42,12 +42,12 @@
     ],
 
     // Donation — point at Ko-fi (recommended), CashApp, or Venmo
-    donate: { label: "Support on Ko-fi", url: "https://ko-fi.com/yourname" },
+    donate: { label: "Support on Ko-fi", url: "https://ko-fi.com/damananders" },
 
     // ---------- OUTREACH / FEATURE SETTINGS ----------
     repoUrl: "https://github.com/damananders/damananders.github.io",
     githubUser: "damananders",                 // contribution graph (blank to hide)
-    twitch: { channel: "yourhandle", parents: ["damananders.github.io"] }, // blank channel hides the Watch section
+    twitch: { channel: "Twitch.tv/DaManAnders", parents: ["damananders.github.io"] }, // blank channel hides the Watch section
     emailEndpoint: "",                         // Formspree URL e.g. https://formspree.io/f/abcdwxyz (blank hides signup)
     analytics: "",                             // GoatCounter e.g. https://YOURCODE.goatcounter.com/count (blank = off)
     soundOnCopy: true,                         // little blip when a code is copied
@@ -60,13 +60,13 @@
   // ============ LIVE ISLANDS ============  (copy a block to add one)
   const LIVE_ISLANDS = [
     {
-      name: "Your First Island",
+      name: "Pier Pressure - FPS",
       code: "0000-0000-0000",
-      tag: "Box Fight",
+      tag: "Arcade FPS",
       emoji: "⚔️",
       image: "",
       featured: true,
-      description: "Replace this with a sentence or two about your first island and why people should play it."
+      description: "Do you remember playing Hijacked on BO2 back in 2012? Have you wished you could experience something nostalgic like that within Fortnite? Then Pier Pressure is for you! Including 3 dynamic events, Fully realized level up system, Lifetime challenges, Killstreaks, Scorestreaks, Custom player classes, Proximity chat & much more!"
     },
     // { name:"", code:"1234-5678-9012", tag:"Survival", emoji:"🧟", image:"", featured:false, description:"" },
   ];
@@ -74,11 +74,11 @@
   // ============ WORKS IN PROGRESS ============
   const WIP = [
     {
-      title: "What I'm building next",
+      title: "Coming Soon...",
       image: "",
       emoji: "🚧",
       status: "In progress",
-      description: "Describe what you're trying to accomplish — the mechanic, the vibe, what's tricky about it."
+      description: "Dodge, Duck, Dip, Dive, & Dodge."
     },
     // { title:"", image:"wip/shot.png", emoji:"🛠️", status:"Prototyping", description:"" },
   ];
@@ -89,8 +89,43 @@
       date: "2026-06-14",
       title: "Site is live — first island incoming",
       tag: "Update",
-      body: "Got the site up and I'm about to publish my first island. Expect regular drops and devlogs about how I'm building them in Verse.",
-      code: "",     // optional: paste a Verse snippet here to show it off
+      body: "My new website is up and running! This page is all about documenting my work as a game developer and keeping everyone up to date on what i've got going on! Here is a taste of how one of the in-game events was built in Verse; The Heli Event.",
+      code: "OnBegin<override>()<suspends>:void =
+        Print("Heli Event System Booting")
+        HeliEventProp0.Hide()
+        HeliEventCapZone.AgentEntersEvent.Subscribe(OnAgentEntersZone)
+        HeliEventCapZone.AgentExitsEvent.Subscribe(OnAgentExitsZone)
+        Print("Heli Event ready - waiting on the event director")
+
+    # Called by MapEventDirector when this event is chosen for the round
+    StartEvent<public>() : void =
+        if (State = game_state.Waiting):
+            Print("Heli Event window now OPEN")
+            spawn:
+                GameLoop()
+
+    OnAgentEntersZone(Agent : agent):void =
+        if (not PlayersInZone.Find[Agent]):
+            set PlayersInZone += array{Agent}
+
+    OnAgentExitsZone(Agent : agent):void =
+        set PlayersInZone = for (P : PlayersInZone, P <> Agent) { P }
+
+    GameLoop()<suspends>:void =
+        loop:
+            if (State = game_state.Waiting):
+                HandleWaiting()
+            else if (State = game_state.Countdown):
+                HandleCountdown()
+            else if (State = game_state.Active):
+                HandleActive()
+            else if (State = game_state.Overtime):
+                HandleOvertime()
+            else if (State = game_state.Ended):
+                Print("Heli Event loop exiting.")
+                break
+            Sleep(1.0)"
+              // optional: paste a Verse snippet here to show it off
       link: ""      // optional: link to a video / tweet / full post
     },
     // { date:"2026-06-20", title:"How I built the leveling system", tag:"Verse", body:"...", code:"# Verse snippet\n...", link:"" },
